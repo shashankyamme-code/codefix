@@ -47,6 +47,12 @@ class AttentionValidator:
         """
         try:
             spec = importlib.util.spec_from_file_location("kv_attention_module", self.module_path)
+<<<<<<< HEAD
+=======
+            if spec is None or spec.loader is None:
+                print(f"✗ Error: Unable to load Python module from '{self.module_path}'")
+                return False
+>>>>>>> master
             self.module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(self.module)
 
@@ -89,6 +95,13 @@ class AttentionValidator:
                 print(f"✗ Error: Test file must contain dict or list")
                 return False
 
+<<<<<<< HEAD
+=======
+            if not self.test_cases:
+                print("✗ Error: Test file contains no test cases")
+                return False
+
+>>>>>>> master
             if self.verbose:
                 print(f"✓ Loaded {len(self.test_cases)} test case(s) from {self.test_file}")
 
@@ -117,10 +130,19 @@ class AttentionValidator:
             if 'values' in data:
                 values = data['values']
                 shape = data.get('shape', None)
+<<<<<<< HEAD
+=======
+                if isinstance(values, str):
+                    raise ValueError(f"Tensor fixture contains unresolved placeholder: {values}")
+>>>>>>> master
                 tensor = torch.tensor(values, dtype=torch.float32)
                 if shape:
                     tensor = tensor.view(*shape)
                 return tensor
+<<<<<<< HEAD
+=======
+            raise ValueError("Tensor data dictionaries must contain a 'values' field")
+>>>>>>> master
 
         return torch.tensor(data, dtype=torch.float32)
 
@@ -143,6 +165,14 @@ class AttentionValidator:
             max_cache_len = config.get('max_cache_len', 2048)
             dropout = config.get('dropout', 0.1)
 
+<<<<<<< HEAD
+=======
+            # Seed before construction so the model parameters are reproducible.
+            seed = test_case.get('seed', 42)
+            torch.manual_seed(seed)
+            np.random.seed(seed)
+
+>>>>>>> master
             # Create model
             model_class = self.module.KVCachedMultiHeadAttention
             model = model_class(
@@ -153,11 +183,14 @@ class AttentionValidator:
             )
             model.eval()  # Set to evaluation mode
 
+<<<<<<< HEAD
             # Set random seed for reproducibility
             seed = test_case.get('seed', 42)
             torch.manual_seed(seed)
             np.random.seed(seed)
 
+=======
+>>>>>>> master
             # Load input tensors
             inputs = test_case.get('inputs', {})
             query = self.tensor_from_data(inputs['query'])
@@ -193,6 +226,12 @@ class AttentionValidator:
                     }
                 )
 
+<<<<<<< HEAD
+=======
+            if not torch.isfinite(output).all():
+                return False, f"✗ Test #{test_id} - Output contains non-finite values", None
+
+>>>>>>> master
             # Validate output shape
             expected_output = self.tensor_from_data(expected['output'])
             if output.shape != expected_output.shape:
@@ -202,6 +241,12 @@ class AttentionValidator:
                     None
                 )
 
+<<<<<<< HEAD
+=======
+            if not torch.isfinite(expected_output).all():
+                return False, f"✗ Test #{test_id} - Expected output contains non-finite values", None
+
+>>>>>>> master
             # Validate output values
             output_diff = torch.abs(output - expected_output).max().item()
             if output_diff > self.tolerance:
@@ -224,6 +269,7 @@ class AttentionValidator:
                         None
                     )
 
+<<<<<<< HEAD
                 # Validate cache values
                 cache_diff = torch.abs(new_cache['key'] - expected_cache_key).max().item()
                 if cache_diff > self.tolerance:
@@ -231,6 +277,30 @@ class AttentionValidator:
                         False,
                         f"✗ Test #{test_id} - Cache key values mismatch: max diff = {cache_diff:.6f}",
                         {'cache_max_diff': cache_diff}
+=======
+                if new_cache['value'].shape != expected_cache_value.shape:
+                    return (
+                        False,
+                        f"✗ Test #{test_id} - Cache value shape mismatch: "
+                        f"got {new_cache['value'].shape}, expected {expected_cache_value.shape}",
+                        None
+                    )
+
+                if not torch.isfinite(expected_cache_key).all() or not torch.isfinite(expected_cache_value).all():
+                    return False, f"✗ Test #{test_id} - Expected cache contains non-finite values", None
+
+                if not torch.isfinite(new_cache['key']).all() or not torch.isfinite(new_cache['value']).all():
+                    return False, f"✗ Test #{test_id} - Cache contains non-finite values", None
+
+                key_diff = torch.abs(new_cache['key'] - expected_cache_key).max().item()
+                value_diff = torch.abs(new_cache['value'] - expected_cache_value).max().item()
+                if key_diff > self.tolerance or value_diff > self.tolerance:
+                    return (
+                        False,
+                        f"✗ Test #{test_id} - Cache values mismatch: "
+                        f"key max diff = {key_diff:.6f}, value max diff = {value_diff:.6f}",
+                        {'cache_key_max_diff': key_diff, 'cache_value_max_diff': value_diff}
+>>>>>>> master
                     )
 
             # All validations passed
@@ -320,6 +390,12 @@ class AttentionValidator:
 
 def main():
     """Main entry point."""
+<<<<<<< HEAD
+=======
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+>>>>>>> master
     parser = argparse.ArgumentParser(
         description="Validate KV-Cached Multi-Head Attention implementation"
     )
