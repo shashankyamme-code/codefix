@@ -1,0 +1,5 @@
+torch>=2.0.0
+numpy>=1.24.0
+
+# Note: Do NOT install transformers or other high-level libraries
+# You must implement the attention mechanism from scratch

@@ -1,0 +1,489 @@
+{
+  "description": "Hidden test cases for KV-Cached Multi-Head Attention - ORGANIZERS ONLY",
+  "note": "These test cases include expected outputs for automated grading. Do NOT share with participants.",
+  "test_cases": [
+    {
+      "id": 1,
+      "name": "Basic attention without cache",
+      "description": "Tests fundamental attention computation",
+      "weight": 10,
+      "config": {
+        "d_model": 16,
+        "num_heads": 2,
+        "max_cache_len": 128,
+        "dropout": 0.0
+      },
+      "seed": 42,
+      "inputs": {
+        "query": {
+          "shape": [1, 4, 16],
+          "values": "_PLACEHOLDER_USE_VISIBLE_TEST_"
+        },
+        "key": {
+          "shape": [1, 4, 16],
+          "values": "_PLACEHOLDER_USE_VISIBLE_TEST_"
+        },
+        "value": {
+          "shape": [1, 4, 16],
+          "values": "_PLACEHOLDER_USE_VISIBLE_TEST_"
+        },
+        "cache": null,
+        "use_causal_mask": true
+      },
+      "expected": {
+        "output": {
+          "shape": [1, 4, 16],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": {
+          "key": {
+            "shape": [1, 4, 16],
+            "values": "_TO_BE_GENERATED_"
+          },
+          "value": {
+            "shape": [1, 4, 16],
+            "values": "_TO_BE_GENERATED_"
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "name": "Attention with cached context",
+      "description": "Tests KV-cache concatenation and reuse",
+      "weight": 15,
+      "config": {
+        "d_model": 16,
+        "num_heads": 2,
+        "max_cache_len": 128,
+        "dropout": 0.0
+      },
+      "seed": 43,
+      "inputs": {
+        "query": {
+          "shape": [1, 1, 16],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "key": {
+          "shape": [1, 1, 16],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "value": {
+          "shape": [1, 1, 16],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": {
+          "key": {
+            "shape": [1, 4, 16],
+            "values": "_FROM_TEST_1_OUTPUT_"
+          },
+          "value": {
+            "shape": [1, 4, 16],
+            "values": "_FROM_TEST_1_OUTPUT_"
+          }
+        },
+        "use_causal_mask": true
+      },
+      "expected": {
+        "output": {
+          "shape": [1, 1, 16],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": {
+          "key": {
+            "shape": [1, 5, 16],
+            "values": "_TO_BE_GENERATED_"
+          },
+          "value": {
+            "shape": [1, 5, 16],
+            "values": "_TO_BE_GENERATED_"
+          }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "name": "Multi-batch attention",
+      "description": "Tests batch dimension handling",
+      "weight": 10,
+      "config": {
+        "d_model": 32,
+        "num_heads": 4,
+        "max_cache_len": 128,
+        "dropout": 0.0
+      },
+      "seed": 100,
+      "inputs": {
+        "query": {
+          "shape": [4, 8, 32],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "key": {
+          "shape": [4, 8, 32],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "value": {
+          "shape": [4, 8, 32],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": null,
+        "use_causal_mask": true
+      },
+      "expected": {
+        "output": {
+          "shape": [4, 8, 32],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": {
+          "key": {
+            "shape": [4, 8, 32],
+            "values": "_TO_BE_GENERATED_"
+          },
+          "value": {
+            "shape": [4, 8, 32],
+            "values": "_TO_BE_GENERATED_"
+          }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "name": "No causal mask",
+      "description": "Tests bidirectional attention (no masking)",
+      "weight": 10,
+      "config": {
+        "d_model": 16,
+        "num_heads": 2,
+        "max_cache_len": 128,
+        "dropout": 0.0
+      },
+      "seed": 50,
+      "inputs": {
+        "query": {
+          "shape": [1, 6, 16],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "key": {
+          "shape": [1, 6, 16],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "value": {
+          "shape": [1, 6, 16],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": null,
+        "use_causal_mask": false
+      },
+      "expected": {
+        "output": {
+          "shape": [1, 6, 16],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": {
+          "key": {
+            "shape": [1, 6, 16],
+            "values": "_TO_BE_GENERATED_"
+          },
+          "value": {
+            "shape": [1, 6, 16],
+            "values": "_TO_BE_GENERATED_"
+          }
+        }
+      }
+    },
+    {
+      "id": 5,
+      "name": "Single head attention",
+      "description": "Edge case with num_heads=1",
+      "weight": 5,
+      "config": {
+        "d_model": 32,
+        "num_heads": 1,
+        "max_cache_len": 128,
+        "dropout": 0.0
+      },
+      "seed": 200,
+      "inputs": {
+        "query": {
+          "shape": [2, 5, 32],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "key": {
+          "shape": [2, 5, 32],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "value": {
+          "shape": [2, 5, 32],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": null,
+        "use_causal_mask": true
+      },
+      "expected": {
+        "output": {
+          "shape": [2, 5, 32],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": {
+          "key": {
+            "shape": [2, 5, 32],
+            "values": "_TO_BE_GENERATED_"
+          },
+          "value": {
+            "shape": [2, 5, 32],
+            "values": "_TO_BE_GENERATED_"
+          }
+        }
+      }
+    },
+    {
+      "id": 6,
+      "name": "Many heads attention",
+      "description": "Tests with num_heads=8",
+      "weight": 10,
+      "config": {
+        "d_model": 64,
+        "num_heads": 8,
+        "max_cache_len": 256,
+        "dropout": 0.0
+      },
+      "seed": 300,
+      "inputs": {
+        "query": {
+          "shape": [1, 10, 64],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "key": {
+          "shape": [1, 10, 64],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "value": {
+          "shape": [1, 10, 64],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": null,
+        "use_causal_mask": true
+      },
+      "expected": {
+        "output": {
+          "shape": [1, 10, 64],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": {
+          "key": {
+            "shape": [1, 10, 64],
+            "values": "_TO_BE_GENERATED_"
+          },
+          "value": {
+            "shape": [1, 10, 64],
+            "values": "_TO_BE_GENERATED_"
+          }
+        }
+      }
+    },
+    {
+      "id": 7,
+      "name": "Long sequence (64 tokens)",
+      "description": "Tests with longer sequences",
+      "weight": 10,
+      "config": {
+        "d_model": 32,
+        "num_heads": 4,
+        "max_cache_len": 256,
+        "dropout": 0.0
+      },
+      "seed": 400,
+      "inputs": {
+        "query": {
+          "shape": [1, 64, 32],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "key": {
+          "shape": [1, 64, 32],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "value": {
+          "shape": [1, 64, 32],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": null,
+        "use_causal_mask": true
+      },
+      "expected": {
+        "output": {
+          "shape": [1, 64, 32],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": {
+          "key": {
+            "shape": [1, 64, 32],
+            "values": "_TO_BE_GENERATED_"
+          },
+          "value": {
+            "shape": [1, 64, 32],
+            "values": "_TO_BE_GENERATED_"
+          }
+        }
+      }
+    },
+    {
+      "id": 8,
+      "name": "Incremental generation (5 steps)",
+      "description": "Simulates autoregressive token generation with growing cache",
+      "weight": 15,
+      "config": {
+        "d_model": 16,
+        "num_heads": 2,
+        "max_cache_len": 128,
+        "dropout": 0.0
+      },
+      "seed": 500,
+      "inputs": {
+        "query": {
+          "shape": [1, 5, 16],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "key": {
+          "shape": [1, 5, 16],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "value": {
+          "shape": [1, 5, 16],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": {
+          "key": {
+            "shape": [1, 10, 16],
+            "values": "_TO_BE_GENERATED_"
+          },
+          "value": {
+            "shape": [1, 10, 16],
+            "values": "_TO_BE_GENERATED_"
+          }
+        },
+        "use_causal_mask": true
+      },
+      "expected": {
+        "output": {
+          "shape": [1, 5, 16],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": {
+          "key": {
+            "shape": [1, 15, 16],
+            "values": "_TO_BE_GENERATED_"
+          },
+          "value": {
+            "shape": [1, 15, 16],
+            "values": "_TO_BE_GENERATED_"
+          }
+        }
+      }
+    },
+    {
+      "id": 9,
+      "name": "Large batch stress test",
+      "description": "Stress test with large batch size",
+      "weight": 5,
+      "config": {
+        "d_model": 64,
+        "num_heads": 4,
+        "max_cache_len": 256,
+        "dropout": 0.0
+      },
+      "seed": 600,
+      "inputs": {
+        "query": {
+          "shape": [16, 12, 64],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "key": {
+          "shape": [16, 12, 64],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "value": {
+          "shape": [16, 12, 64],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": null,
+        "use_causal_mask": true
+      },
+      "expected": {
+        "output": {
+          "shape": [16, 12, 64],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": {
+          "key": {
+            "shape": [16, 12, 64],
+            "values": "_TO_BE_GENERATED_"
+          },
+          "value": {
+            "shape": [16, 12, 64],
+            "values": "_TO_BE_GENERATED_"
+          }
+        }
+      }
+    },
+    {
+      "id": 10,
+      "name": "Single token generation",
+      "description": "Tests generation of single next token (typical LLM inference)",
+      "weight": 10,
+      "config": {
+        "d_model": 32,
+        "num_heads": 4,
+        "max_cache_len": 128,
+        "dropout": 0.0
+      },
+      "seed": 700,
+      "inputs": {
+        "query": {
+          "shape": [1, 1, 32],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "key": {
+          "shape": [1, 1, 32],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "value": {
+          "shape": [1, 1, 32],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": {
+          "key": {
+            "shape": [1, 20, 32],
+            "values": "_TO_BE_GENERATED_"
+          },
+          "value": {
+            "shape": [1, 20, 32],
+            "values": "_TO_BE_GENERATED_"
+          }
+        },
+        "use_causal_mask": true
+      },
+      "expected": {
+        "output": {
+          "shape": [1, 1, 32],
+          "values": "_TO_BE_GENERATED_"
+        },
+        "cache": {
+          "key": {
+            "shape": [1, 21, 32],
+            "values": "_TO_BE_GENERATED_"
+          },
+          "value": {
+            "shape": [1, 21, 32],
+            "values": "_TO_BE_GENERATED_"
+          }
+        }
+      }
+    }
+  ],
+  "scoring": {
+    "total_weight": 100,
+    "test_1_4_weight": 45,
+    "test_5_8_weight": 40,
+    "test_9_10_weight": 15
+  }
+}
