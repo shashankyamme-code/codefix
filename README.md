@@ -31,32 +31,24 @@ Python 3.10+ and PyTorch are required.
 
 Install dependencies:
 
-```powershell
-cd "C:\Users\yamme\OneDrive\Documents\CODEFIX"
-python -m pip install -r requirment.txt
+```python -m pip install -r requirment.txt
 ```
 
 ## Run the validator
 
 Use:
 
-```powershell
-cd "C:\Users\yamme\OneDrive\Documents\CODEFIX"
-python validator.py --file kv_attention.py --verbose
+```python validator.py --file kv_attention.py --verbose
 ```
 
 The included hidden-test template is not runnable until its placeholder values are replaced with actual tensors and expected outputs. If you have a populated hidden test file, run:
 
-```powershell
-cd "C:\Users\yamme\OneDrive\Documents\CODEFIX"
-python validator.py --file kv_attention.py --test-file test_cases_hidden.json
+```python validator.py --file kv_attention.py --test-file test_cases_hidden.json
 ```
 
 Run the static attention debugger with:
 
-```powershell
-cd "C:\Users\yamme\OneDrive\Documents\CODEFIX"
-python attention_debugger.py
+```python attention_debugger.py
 ```
 
 ## Expected behavior
